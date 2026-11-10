@@ -1,4 +1,4 @@
-# app.py - THAI AI PROFESSIONAL v7.9 (GitHub API Sync & Append Fix)
+# THAI AI LOTTO PROFESSIONAL — Commercial Light Dashboard
 import streamlit as st
 import pandas as pd
 import os
@@ -22,13 +22,13 @@ DAILY_NUMBERS = {
     "Sunday":    "062341",
 }
 
-VERSION = "หวยรัฐบาลไทย by TOMMY v7.9 GITHUB SYNC"
+VERSION = "THAI AI LOTTO PROFESSIONAL | Commercial Edition"
 
 # ==========================================
 # 1. PAGE CONFIG & MODERN CSS (Glassmorphism & Pro UI)
 # ==========================================
 st.set_page_config(
-    page_title="THAI AI LOTTO PROFESSIONAL v8.5",
+    page_title="THAI AI LOTTO PROFESSIONAL",
     page_icon="🎰",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -101,6 +101,160 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+
+st.markdown("""
+<style>
+:root { color-scheme: light; }
+.stApp { background: #f4f7fb; }
+[data-testid="stHeader"] { background: rgba(244,247,251,.88); }
+[data-testid="stSidebar"] { background: #ffffff; border-right: 1px solid #e5eaf2; }
+.block-container { padding-top: 1.7rem; padding-bottom: 3rem; max-width: 1500px; }
+h1, h2, h3 { color: #12233f; letter-spacing: -.3px; }
+p, label, .stCaption { color: #53647d; }
+.stButton > button, .stDownloadButton > button {
+    border-radius: 11px; border: 1px solid #d8e2ef; font-weight: 700;
+    min-height: 2.65rem; box-shadow: 0 2px 7px rgba(20,48,85,.05);
+}
+.stButton > button[kind="primary"] {
+    background: linear-gradient(100deg,#1478d4,#1456a6); border: 0; color: white;
+}
+[data-testid="stMetric"] {
+    background: #fff; border: 1px solid #e3eaf3; border-radius: 15px;
+    padding: 16px 18px; box-shadow: 0 5px 18px rgba(22,48,80,.045);
+}
+[data-testid="stDataFrame"], [data-testid="stTable"] {
+    border: 1px solid #e3eaf3; border-radius: 12px; overflow: hidden;
+}
+div[data-testid="stExpander"] {
+    background: #fff; border: 1px solid #e3eaf3; border-radius: 13px;
+}
+.brand-banner {
+    background: linear-gradient(110deg,#ffffff 0%,#edf5ff 100%);
+    border: 1px solid #dce8f6; border-radius: 18px; padding: 22px 25px;
+    margin-bottom: 20px; box-shadow: 0 8px 24px rgba(26,72,125,.05);
+}
+.brand-kicker { color:#2473bd; font-size:.78rem; font-weight:800; letter-spacing:1.5px; }
+.brand-heading { color:#102b4e; font-size:2rem; line-height:1.2; font-weight:850; margin:5px 0 3px; }
+.brand-sub { color:#62748b; font-size:.96rem; margin:0; }
+.premium-panel {
+    background: linear-gradient(120deg,#fff 0%,#fffaf0 100%);
+    border:1px solid #ead9ae; border-radius:15px; padding:16px 18px;
+}
+.login-wrap {
+    max-width: 520px; margin: 4vh auto; background:white; padding:30px;
+    border:1px solid #e2eaf4; border-radius:20px; box-shadow:0 15px 45px rgba(18,43,78,.09);
+}
+.metric-card, .metric-card-pro {
+    background: white !important; border: 1px solid #e2eaf4 !important;
+    border-radius: 15px !important; padding: 17px 10px !important;
+    box-shadow: 0 5px 18px rgba(22,48,80,.045) !important;
+}
+.metric-card h4, .metric-card-pro h4 { color:#65758b !important; }
+.metric-card h2, .metric-card-pro h2 { color:#176fbd !important; }
+.set-card { border-color:#e2eaf4 !important; border-radius:15px !important; }
+.small-muted { color:#718198; font-size:.82rem; }
+</style>
+""", unsafe_allow_html=True)
+
+
+# ==========================================
+# 1A. COMMERCIAL MEMBERSHIP & AUTHENTICATION
+# ==========================================
+import hashlib
+import hmac
+import base64 as _b64
+from datetime import datetime, date
+
+def _secret_value(key, default=None):
+    try:
+        return st.secrets.get(key, default)
+    except Exception:
+        return default
+
+def _verify_member_password(password, stored_value):
+    """
+    Supported secure format:
+    pbkdf2_sha256$iterations$salt_hex$derived_key_hex
+    """
+    try:
+        algorithm, iterations, salt_hex, expected_hex = str(stored_value).split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        calculated = hashlib.pbkdf2_hmac(
+            "sha256", password.encode("utf-8"), bytes.fromhex(salt_hex),
+            int(iterations)
+        ).hex()
+        return hmac.compare_digest(calculated, expected_hex)
+    except Exception:
+        return False
+
+def _member_records():
+    records = _secret_value("MEMBERS", {})
+    try:
+        return {str(k).lower(): dict(v) for k, v in records.items()}
+    except Exception:
+        return {}
+
+def _member_is_active(record):
+    if not record or not bool(record.get("active", True)):
+        return False
+    expiry = str(record.get("expires", "")).strip()
+    if expiry:
+        try:
+            return date.today() <= date.fromisoformat(expiry)
+        except ValueError:
+            return False
+    return True
+
+def _authenticate(username, password):
+    record = _member_records().get(str(username).strip().lower())
+    if not record or not _member_is_active(record):
+        return None
+    if _verify_member_password(password, record.get("password_hash", "")):
+        return {
+            "username": str(username).strip(),
+            "plan": str(record.get("plan", "free")).lower(),
+            "role": str(record.get("role", "member")).lower(),
+            "expires": str(record.get("expires", "")).strip()
+        }
+    return None
+
+def _is_premium_member():
+    member = st.session_state.get("member_profile", {})
+    return member.get("role") == "admin" or member.get("plan") in ("premium", "vip")
+
+def _membership_login():
+    st.markdown('<div class="login-wrap">', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="brand-kicker">MEMBER ACCESS</div>'
+        '<div class="brand-heading">THAI AI LOTTO PROFESSIONAL</div>'
+        '<p class="brand-sub">ระบบวิเคราะห์สถิติหวยสำหรับสมาชิก</p>',
+        unsafe_allow_html=True
+    )
+    st.markdown("---")
+    with st.form("member_login_form", clear_on_submit=False):
+        username = st.text_input("ชื่อผู้ใช้", placeholder="Username")
+        password = st.text_input("รหัสผ่าน", type="password", placeholder="Password")
+        submitted = st.form_submit_button("เข้าสู่ระบบสมาชิก", type="primary", use_container_width=True)
+    if submitted:
+        profile = _authenticate(username, password)
+        if profile:
+            st.session_state["authenticated"] = True
+            st.session_state["member_profile"] = profile
+            st.rerun()
+        else:
+            st.error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง หรือสมาชิกหมดอายุ/ถูกระงับ")
+    st.info("สำหรับสมาชิกใหม่ กรุณาติดต่อผู้ดูแลระบบเพื่อเปิดใช้งานบัญชี")
+    st.markdown('</div>', unsafe_allow_html=True)
+    st.caption("© THAI AI LOTTO PROFESSIONAL. ผลการวิเคราะห์เป็นข้อมูลเชิงสถิติ ไม่ใช่การรับประกันผลรางวัล")
+
+# Commercial mode is secure-by-default. Configure MEMBERS in Streamlit Secrets.
+AUTH_ENABLED = str(_secret_value("AUTH_ENABLED", "true")).lower() not in ("false", "0", "no")
+if AUTH_ENABLED and not st.session_state.get("authenticated", False):
+    _membership_login()
+    st.stop()
+
 
 # ==========================================
 # 2. SESSION STATE INITIALIZATION
@@ -502,9 +656,23 @@ def build_formula_back2_rows(base_number, daily_number, actual_back2=None):
 # 5. STREAMLIT UI SIDEBAR NAVIGATION
 # ==========================================
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/2643/2643521.png", width=70)
-    st.title("🧠 เมนูหลัก")
-    
+    st.markdown("## 🧠 THAI AI LOTTO")
+    st.caption("PROFESSIONAL • COMMERCIAL EDITION")
+    member = st.session_state.get("member_profile", {})
+    if AUTH_ENABLED:
+        plan_label = "ADMIN" if member.get("role") == "admin" else ("PREMIUM" if _is_premium_member() else "FREE")
+        st.markdown(
+            f'<div class="premium-panel"><b>สมาชิก: {member.get("username","")}</b>'
+            f'<br><span style="color:#8a671e;font-weight:800">{plan_label} MEMBER</span>'
+            f'<br><span class="small-muted">หมดอายุ: {member.get("expires") or "ไม่กำหนด"}</span></div>',
+            unsafe_allow_html=True
+        )
+        if st.button("ออกจากระบบ", use_container_width=True):
+            st.session_state.pop("authenticated", None)
+            st.session_state.pop("member_profile", None)
+            st.rerun()
+    st.markdown("---")
+    st.title("เมนูหลัก")
     menu = st.radio(
         "เลือกหน้าใช้งาน:",
         [
@@ -516,11 +684,37 @@ with st.sidebar:
     )
     st.markdown("---")
     st.caption(f"เวอร์ชัน: {VERSION}")
+    st.caption("Light Dashboard • Responsive layout")
+
+
+def render_brand_header(section_title=""):
+    profile = st.session_state.get("member_profile", {})
+    tier = "PREMIUM" if _is_premium_member() else ("ADMIN" if profile.get("role") == "admin" else "FREE")
+    st.markdown(
+        f'<div class="brand-banner"><div class="brand-kicker">THAI AI LOTTO • {tier} MEMBER</div>'
+        f'<div class="brand-heading">THAI AI LOTTO PROFESSIONAL</div>'
+        f'<p class="brand-sub">ระบบวิเคราะห์สถิติและแนวทางสลากกินแบ่งรัฐบาล | {section_title}</p></div>',
+        unsafe_allow_html=True
+    )
+
+def require_premium(feature_name):
+    if _is_premium_member():
+        return True
+    st.warning(f"🔒 {feature_name} เป็นฟังก์ชันสำหรับสมาชิก Premium")
+    st.markdown(
+        '<div class="premium-panel"><b>อัปเกรดเป็น Premium</b>'
+        '<br>ปลดล็อก Backtest, วิเคราะห์ประสิทธิภาพสูตร และการตั้งค่าน้ำหนัก AI'
+        '<br><span class="small-muted">กรุณาติดต่อผู้ดูแลระบบเพื่อสมัครหรือเปิดใช้งานแพ็กเกจ</span></div>',
+        unsafe_allow_html=True
+    )
+    return False
+
 
 # ==========================================
 # 6. ALL-IN-ONE MASTER REPORT 
 # ==========================================
 if menu == "🏆 All-in-One Master Report":
+    render_brand_header("AI Prediction Dashboard")
     st.markdown('<h1 class="main-title">🎰 THAI AI LOTTO PROFESSIONAL</h1>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">ระบบวิเคราะห์สถิติและแนวทางสลากกินแบ่งรัฐบาลด้วย AI (GitHub Sync)</p>', unsafe_allow_html=True)
     
@@ -580,7 +774,7 @@ if menu == "🏆 All-in-One Master Report":
                         cnt = frequency_counts.get(d, 0)
                         with cols[i]:
                             st.markdown(f"""
-                                <div class="metric-card">
+                                <div class="metric-card-pro">
                                     <h4>อันดับ {i+1}</h4>
                                     <h2>{d}</h2>
                                     <span style="font-size: 11px; color: #64748b;">{cnt} ครั้ง</span>
@@ -646,6 +840,7 @@ if menu == "🏆 All-in-One Master Report":
 # 7. MANAGEMENT HISTORY PAGE (GitHub Sync)
 # ==========================================
 elif menu == "📚 เพิ่ม/จัดการประวัติหวย":
+    render_brand_header("Lottery History & GitHub Sync")
     st.title("📚 เพิ่มและจัดการประวัติหวยรายวัน (GitHub Sync)")
     day_upload = st.selectbox("เลือกวันสำหรับจัดการประวัติ:", DAYS)
     target_csv = get_csv_filename_by_day(day_upload)
@@ -695,6 +890,9 @@ elif menu == "📚 เพิ่ม/จัดการประวัติหว
 # 8. COMPLETE BACKTEST ENGINE
 # ==========================================
 elif menu == "📈 รันระบบทดสอบย้อนหลัง (Backtest)":
+    render_brand_header("Premium Backtest Analytics")
+    if not require_premium("ระบบทดสอบย้อนหลัง (Backtest)"):
+        st.stop()
     st.title("📈 ระบบทดสอบย้อนหลัง (Backtest Engine)")
     st.caption("แสดงผล Backtest แยกรายสูตร พร้อมเลขท้าย 2 ตัวที่คำนวณจากเลขฐานล่าสุด")
 
@@ -782,6 +980,9 @@ elif menu == "📈 รันระบบทดสอบย้อนหลัง 
 # 9. SETTINGS PAGE
 # ==========================================
 elif menu == "⚙️ ตั้งค่าน้ำหนัก AI (Settings)":
+    render_brand_header("AI Weight Configuration")
+    if not require_premium("การตั้งค่าน้ำหนัก AI"):
+        st.stop()
     st.title("⚙️ ตั้งค่าน้ำหนัก AI (Weight Settings)")
     w_f = st.slider("Formula Weight", 0.1, 2.0, st.session_state.ai_settings["formula_weight"])
     w_c = st.slider("Cross Weight", 0.1, 2.0, st.session_state.ai_settings["cross_weight"])
@@ -790,3 +991,13 @@ elif menu == "⚙️ ตั้งค่าน้ำหนัก AI (Settings)":
         st.session_state.ai_settings["formula_weight"] = w_f
         st.session_state.ai_settings["cross_weight"] = w_c
         st.success("✅ บันทึกค่าน้ำหนักใหม่เรียบร้อย!")
+
+# ==========================================
+# 10. COMMERCIAL FOOTER & PRODUCT DISCLAIMER
+# ==========================================
+st.markdown("---")
+st.caption(
+    "THAI AI LOTTO PROFESSIONAL • Commercial Light Dashboard | "
+    "การวิเคราะห์เป็นการประมวลผลข้อมูลสถิติจากประวัติและสูตรที่กำหนด "
+    "ไม่มีวิธีใดรับประกันผลสลากกินแบ่งรัฐบาลได้"
+)
