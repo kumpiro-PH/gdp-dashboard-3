@@ -1,4 +1,4 @@
-# THAI AI LOTTO PROFESSIONAL — Commercial Light Dashboard
+# THAI AI LOTTO PROFESSIONAL — Dark Premium Analytics Dashboard
 import streamlit as st
 import pandas as pd
 import os
@@ -105,55 +105,103 @@ st.markdown("""
 
 st.markdown("""
 <style>
-:root { color-scheme: light; }
-.stApp { background: #f4f7fb; }
-[data-testid="stHeader"] { background: rgba(244,247,251,.88); }
-[data-testid="stSidebar"] { background: #ffffff; border-right: 1px solid #e5eaf2; }
-.block-container { padding-top: 1.7rem; padding-bottom: 3rem; max-width: 1500px; }
-h1, h2, h3 { color: #12233f; letter-spacing: -.3px; }
-p, label, .stCaption { color: #53647d; }
+:root { color-scheme: dark; }
+.stApp {
+    background:
+      radial-gradient(ellipse at 5% 0%, rgba(0,173,210,.14), transparent 32%),
+      radial-gradient(ellipse at 100% 45%, rgba(115,52,210,.13), transparent 32%),
+      #080d20;
+    color: #e8efff;
+}
+[data-testid="stHeader"] { background: rgba(8,13,32,.88); }
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg,#090d20 0%,#101832 100%);
+    border-right: 1px solid #222c4d;
+}
+[data-testid="stSidebar"] * { color: #cbd5ed; }
+.block-container { padding-top: 1.35rem; padding-bottom: 3rem; max-width: 1600px; }
+h1, h2, h3, h4 { color: #f1f5ff !important; letter-spacing: -.25px; }
+p, label, .stCaption, [data-testid="stCaptionContainer"] { color: #9eaccb; }
+small { color: #9eaccb; }
+.stMarkdown, .stText, .stRadio, .stSelectbox, .stTextInput { color: #dce6fb; }
+[data-testid="stMetric"] {
+    background: linear-gradient(145deg,#151d3a,#10172e);
+    border: 1px solid #283456; border-radius: 15px;
+    padding: 17px 18px; box-shadow: 0 9px 28px rgba(0,0,0,.22);
+}
+[data-testid="stMetricLabel"] { color:#98a8ca !important; }
+[data-testid="stMetricValue"] { color:#f4f7ff !important; }
+[data-testid="stMetricDelta"] { color:#45c6d9 !important; }
 .stButton > button, .stDownloadButton > button {
-    border-radius: 11px; border: 1px solid #d8e2ef; font-weight: 700;
-    min-height: 2.65rem; box-shadow: 0 2px 7px rgba(20,48,85,.05);
+    border-radius: 11px; border: 1px solid #33436d; font-weight: 750;
+    min-height: 2.65rem; background:#182344; color:#e8efff;
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(100deg,#1478d4,#1456a6); border: 0; color: white;
+    background: linear-gradient(100deg,#087ec4,#2456bd);
+    border: 0; color: white;
 }
-[data-testid="stMetric"] {
-    background: #fff; border: 1px solid #e3eaf3; border-radius: 15px;
-    padding: 16px 18px; box-shadow: 0 5px 18px rgba(22,48,80,.045);
+.stButton > button:hover, .stDownloadButton > button:hover {
+    border-color:#39b8d2; color:#fff;
+}
+[data-testid="stTextInput"] input, [data-testid="stNumberInput"] input {
+    background:#101a35; border:1px solid #344367; border-radius:10px; color:#f4f7ff;
+}
+[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+[data-testid="stDateInput"] input {
+    background:#101a35; border-color:#344367; color:#f4f7ff;
 }
 [data-testid="stDataFrame"], [data-testid="stTable"] {
-    border: 1px solid #e3eaf3; border-radius: 12px; overflow: hidden;
+    border:1px solid #283456; border-radius:12px; overflow:hidden;
 }
 div[data-testid="stExpander"] {
-    background: #fff; border: 1px solid #e3eaf3; border-radius: 13px;
+    background:#111a34; border:1px solid #283456; border-radius:13px;
 }
+[data-testid="stAlert"] { border-radius:12px; }
+hr { border-color:#283456 !important; }
 .brand-banner {
-    background: linear-gradient(110deg,#ffffff 0%,#edf5ff 100%);
-    border: 1px solid #dce8f6; border-radius: 18px; padding: 22px 25px;
-    margin-bottom: 20px; box-shadow: 0 8px 24px rgba(26,72,125,.05);
+    background:linear-gradient(115deg,rgba(15,25,53,.98),rgba(20,24,61,.96));
+    border:1px solid #2a3a62; border-radius:18px; padding:21px 25px;
+    margin-bottom:18px; box-shadow:0 12px 35px rgba(0,0,0,.24);
 }
-.brand-kicker { color:#2473bd; font-size:.78rem; font-weight:800; letter-spacing:1.5px; }
-.brand-heading { color:#102b4e; font-size:2rem; line-height:1.2; font-weight:850; margin:5px 0 3px; }
-.brand-sub { color:#62748b; font-size:.96rem; margin:0; }
+.brand-kicker { color:#4cc9e4; font-size:.76rem; font-weight:850; letter-spacing:2px; }
+.brand-heading {
+    color:#f4f7ff; font-size:1.9rem; line-height:1.2;
+    font-weight:900; margin:5px 0 3px;
+}
+.brand-sub { color:#9eaccb; font-size:.94rem; margin:0; }
 .premium-panel {
-    background: linear-gradient(120deg,#fff 0%,#fffaf0 100%);
-    border:1px solid #ead9ae; border-radius:15px; padding:16px 18px;
-}
-.login-wrap {
-    max-width: 520px; margin: 4vh auto; background:white; padding:30px;
-    border:1px solid #e2eaf4; border-radius:20px; box-shadow:0 15px 45px rgba(18,43,78,.09);
+    background:linear-gradient(120deg,#172344,#201d45);
+    border:1px solid #6250a2; border-radius:15px; padding:16px 18px;
+    color:#e8eaff;
 }
 .metric-card, .metric-card-pro {
-    background: white !important; border: 1px solid #e2eaf4 !important;
-    border-radius: 15px !important; padding: 17px 10px !important;
-    box-shadow: 0 5px 18px rgba(22,48,80,.045) !important;
+    background:linear-gradient(145deg,#172344,#111a33) !important;
+    border:1px solid #2b3b62 !important; border-radius:15px !important;
+    padding:17px 10px !important; box-shadow:0 8px 25px rgba(0,0,0,.20) !important;
 }
-.metric-card h4, .metric-card-pro h4 { color:#65758b !important; }
-.metric-card h2, .metric-card-pro h2 { color:#176fbd !important; }
-.set-card { border-color:#e2eaf4 !important; border-radius:15px !important; }
-.small-muted { color:#718198; font-size:.82rem; }
+.metric-card h4, .metric-card-pro h4 { color:#9caccd !important; }
+.metric-card h2, .metric-card-pro h2 { color:#49c7df !important; }
+.set-card {
+    background:#151f3d !important; border-color:#2c3b60 !important;
+    border-radius:15px !important; color:#e8efff !important;
+}
+.small-muted { color:#8798ba; font-size:.82rem; }
+.dash-panel {
+    background:linear-gradient(145deg,#141e3b,#10172e);
+    border:1px solid #29395e; border-radius:16px;
+    padding:17px 19px; min-height:125px;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
+}
+.dash-label { color:#94a6ca; font-size:.78rem; font-weight:750; letter-spacing:.7px; }
+.dash-value { color:#f5f7ff; font-size:1.75rem; font-weight:900; margin-top:8px; }
+.dash-sub { color:#7184aa; font-size:.76rem; margin-top:3px; }
+.section-kicker { color:#4dc9e1; font-size:.74rem; font-weight:850; letter-spacing:1.5px; }
+[data-testid="stSidebar"] [data-testid="stRadio"] label {
+    background:rgba(255,255,255,.025); border-radius:9px; padding:5px 8px;
+}
+[data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+    background:rgba(65,160,220,.13);
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -744,16 +792,16 @@ with st.sidebar:
     )
     st.markdown("---")
     st.caption(f"เวอร์ชัน: {VERSION}")
-    st.caption("Light Dashboard • Responsive layout")
+    st.caption("DARK PREMIUM ANALYTICS • COMMERCIAL EDITION")
 
 
 def render_brand_header(section_title=""):
     profile = st.session_state.get("member_profile", {})
     tier = "PREMIUM" if _is_premium_member() else ("ADMIN" if profile.get("role") == "admin" else "FREE")
     st.markdown(
-        f'<div class="brand-banner"><div class="brand-kicker">THAI AI LOTTO • {tier} MEMBER</div>'
+        f'<div class="brand-banner"><div class="brand-kicker">● THAI AI LOTTO / ANALYTICS PLATFORM</div>'
         f'<div class="brand-heading">THAI AI LOTTO PROFESSIONAL</div>'
-        f'<p class="brand-sub">ระบบวิเคราะห์สถิติและแนวทางสลากกินแบ่งรัฐบาล | {section_title}</p></div>',
+        f'<p class="brand-sub">{section_title} &nbsp; • &nbsp; {tier} ACCESS &nbsp; • &nbsp; LIVE DATA WORKSPACE</p></div>',
         unsafe_allow_html=True
     )
 
@@ -802,6 +850,57 @@ if menu == "🏆 All-in-One Master Report":
         )
         st.session_state.target_number = target_number
 
+    # Executive overview panels — visual layer only; existing formula logic remains unchanged.
+    history_count = len(st.session_state.history)
+    latest_draw = st.session_state.history[0] if history_count else {}
+    latest_first = latest_draw.get("first", "------")
+    latest_back2 = latest_draw.get("back2", "--")
+    overview_cols = st.columns(4)
+    overview_items = [
+        ("LATEST FIRST PRIZE", latest_first, latest_draw.get("date", "No history loaded")),
+        ("LATEST LAST 2", latest_back2, "Latest saved result"),
+        ("HISTORY RECORDS", f"{history_count:,}", f"{day_choice} database"),
+        ("DAILY NUMBER", daily_number, "Static daily reference"),
+    ]
+    for col, (label, value, sub) in zip(overview_cols, overview_items):
+        with col:
+            st.markdown(
+                f'<div class="dash-panel"><div class="dash-label">{label}</div>'
+                f'<div class="dash-value">{value}</div><div class="dash-sub">{sub}</div></div>',
+                unsafe_allow_html=True
+            )
+
+    st.markdown("")
+    chart_col, info_col = st.columns([1.7, 1])
+    with chart_col:
+        st.markdown('<div class="section-kicker">HISTORICAL INSIGHTS</div>', unsafe_allow_html=True)
+        st.markdown("### Digit frequency overview")
+        if history_count:
+            digit_pool = "".join(item.get("first", "") for item in st.session_state.history[:30])
+            digit_freq = Counter(ch for ch in digit_pool if ch.isdigit())
+            freq_df = pd.DataFrame(
+                [{"Digit": str(d), "Frequency": digit_freq.get(str(d), 0)} for d in range(10)]
+            ).set_index("Digit")
+            st.bar_chart(freq_df, height=220, color="#20b8d2")
+        else:
+            st.info("ยังไม่มีข้อมูลประวัติสำหรับแสดงกราฟ")
+    with info_col:
+        st.markdown('<div class="section-kicker">ENGINE STATUS</div>', unsafe_allow_html=True)
+        st.markdown("### Analysis workspace")
+        st.markdown(
+            '<div class="dash-panel"><div class="dash-label">ACTIVE ENGINE</div>'
+            '<div class="dash-value">15 FORMULAS</div>'
+            '<div class="dash-sub">Formula ensemble is ready</div><hr>'
+            '<div class="dash-label">DATA SOURCE</div>'
+            '<div style="color:#e9f1ff;font-weight:750;margin-top:6px">CSV / GITHUB SYNC</div>'
+            '<div class="dash-sub">Daily history by draw day</div></div>',
+            unsafe_allow_html=True
+        )
+
+    st.markdown("---")
+    st.markdown('<div class="section-kicker">PREDICTION CONTROL CENTER</div>', unsafe_allow_html=True)
+    st.markdown("### Configure next-draw analysis")
+
     if not st.session_state.history:
         st.warning(f"⚠️ ไม่พบข้อมูลประวัติสำหรับวัน {day_choice} กรุณาตรวจสอบไฟล์ CSV หรือเพิ่มข้อมูลผ่านเมนู 'เพิ่ม/จัดการประวัติหวย'")
     else:
@@ -821,7 +920,7 @@ if menu == "🏆 All-in-One Master Report":
                 remaining = top_digits[6:]
 
                 st.markdown(f"""
-                    <div style="background-color: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-weight: 600; color: #1e293b;">
+                    <div style="background:linear-gradient(110deg,#162344,#121a35); padding:14px 17px; border-radius:12px; border:1px solid #30436b; margin-bottom:20px; font-weight:700; color:#eaf1ff;">
                         📅 วัน: {day_choice}  |  เลขฐาน: {target_number}  |  Daily Number: {daily_number}  |  จำนวนสูตร: 15
                     </div>
                 """, unsafe_allow_html=True)
@@ -859,7 +958,7 @@ if menu == "🏆 All-in-One Master Report":
                 set5 = top_digits[:5]
                 with set_cols[0]:
                     st.markdown(f"""
-                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; padding: 15px;">
+                        <div style="background: linear-gradient(145deg,#172344,#111a33); border: 1px solid #2b3b62; border-radius: 12px; text-align: center; padding: 16px;">
                             <div style="font-size: 12px; color: #64748b; margin-bottom: 5px;">ชุด 5 ตัว</div>
                             <div style="font-size: 20px; font-weight: bold; color: #15803d; letter-spacing: 3px;">{" ".join(set5)}</div>
                             <div style="font-size: 10px; color: #94a3b8; margin-top: 8px;">{get_stat_str(set5)}</div>
@@ -869,7 +968,7 @@ if menu == "🏆 All-in-One Master Report":
                 set4 = top_digits[:4]
                 with set_cols[1]:
                     st.markdown(f"""
-                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; padding: 15px;">
+                        <div style="background: linear-gradient(145deg,#172344,#111a33); border: 1px solid #2b3b62; border-radius: 12px; text-align: center; padding: 16px;">
                             <div style="font-size: 12px; color: #64748b; margin-bottom: 5px;">ชุด 4 ตัว</div>
                             <div style="font-size: 20px; font-weight: bold; color: #0369a1; letter-spacing: 3px;">{" ".join(set4)}</div>
                             <div style="font-size: 10px; color: #94a3b8; margin-top: 8px;">{get_stat_str(set4)}</div>
@@ -879,7 +978,7 @@ if menu == "🏆 All-in-One Master Report":
                 set3 = top_digits[:3]
                 with set_cols[2]:
                     st.markdown(f"""
-                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; padding: 15px;">
+                        <div style="background: linear-gradient(145deg,#172344,#111a33); border: 1px solid #2b3b62; border-radius: 12px; text-align: center; padding: 16px;">
                             <div style="font-size: 12px; color: #64748b; margin-bottom: 5px;">ชุด 3 ตัว</div>
                             <div style="font-size: 20px; font-weight: bold; color: #7e22ce; letter-spacing: 3px;">{" ".join(set3)}</div>
                             <div style="font-size: 10px; color: #94a3b8; margin-top: 8px;">{get_stat_str(set3)}</div>
@@ -889,7 +988,7 @@ if menu == "🏆 All-in-One Master Report":
                 set2 = top_digits[:2]
                 with set_cols[3]:
                     st.markdown(f"""
-                        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; text-align: center; padding: 15px;">
+                        <div style="background: linear-gradient(145deg,#172344,#111a33); border: 1px solid #2b3b62; border-radius: 12px; text-align: center; padding: 16px;">
                             <div style="font-size: 12px; color: #64748b; margin-bottom: 5px;">ชุด 2 ตัว</div>
                             <div style="font-size: 20px; font-weight: bold; color: #b45309; letter-spacing: 3px;">{" ".join(set2)}</div>
                             <div style="font-size: 10px; color: #94a3b8; margin-top: 8px;">{get_stat_str(set2)}</div>
@@ -1026,7 +1125,7 @@ elif menu == "📈 รันระบบทดสอบย้อนหลัง 
             st.divider()
             st.subheader("📈 เปรียบเทียบ Exact Match (%)")
             chart_data = df_bt_detail.set_index("สูตร")[["Exact Match (%)"]]
-            st.bar_chart(chart_data)
+            st.bar_chart(chart_data, color="#8b5cf6")
 
             with st.expander("📥 ดาวน์โหลดรายงาน Backtest"):
                 st.download_button(
