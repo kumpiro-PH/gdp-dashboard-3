@@ -221,6 +221,9 @@ def _authenticate(username, password):
     return None
 
 def _is_premium_member():
+    # No-login mode: all app features remain accessible.
+    if not AUTH_ENABLED:
+        return True
     member = st.session_state.get("member_profile", {})
     return member.get("role") == "admin" or member.get("plan") in ("premium", "vip")
 
@@ -287,7 +290,7 @@ def _membership_login():
             st.markdown('<span class="login-chip">✦ PREMIUM MEMBER EXPERIENCE</span>', unsafe_allow_html=True)
             st.markdown("")
             st.markdown("#### เข้าสู่พื้นที่สมาชิก")
-            st.caption("หน้าจอนี้เป็นตัวอย่างการออกแบบเท่านั้น ยังไม่เปิดใช้ระบบบัญชีสมาชิก")
+            st.caption("สามารถใช้งานระบบได้โดยไม่ต้องเข้าสู่ระบบ")
             st.text_input("ชื่อผู้ใช้", placeholder="กรอกชื่อผู้ใช้", key="design_username")
             st.text_input("รหัสผ่าน", placeholder="ยังไม่เปิดใช้งาน", type="password",
                           key="design_password", disabled=True)
@@ -309,12 +312,9 @@ def _membership_login():
         unsafe_allow_html=True
     )
 
-# Design preview is enabled temporarily. Authentication and password checks are intentionally
-# not activated until the user approves the visual design.
-LOGIN_DESIGN_PREVIEW = True
-if LOGIN_DESIGN_PREVIEW:
-    _membership_login()
-    st.stop()
+# Login is intentionally disabled: open the dashboard directly without username or password.
+LOGIN_DESIGN_PREVIEW = False
+AUTH_ENABLED = False
 
 # ==========================================
 # 2. SESSION STATE INITIALIZATION
