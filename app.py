@@ -25,54 +25,79 @@ DAILY_NUMBERS = {
 VERSION = "หวยรัฐบาลไทย by TOMMY v7.9 GITHUB SYNC"
 
 # ==========================================
-# 1. PAGE CONFIG & CUSTOM CSS (Sky Blue Theme)
+# 1. PAGE CONFIG & MODERN CSS (Glassmorphism & Pro UI)
 # ==========================================
 st.set_page_config(
-    page_title="THAI AI LOTTO PROFESSIONAL v7.9",
-    page_icon="🧠",
+    page_title="THAI AI LOTTO PROFESSIONAL v8.5",
+    page_icon="🎰",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap');
     html, body, [class*="css"] { font-family: 'Sarabun', sans-serif; }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     
+    /* Main Header Styling */
     .main-title {
-        background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%);
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 50%, #1e3a8a 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         font-weight: 800;
         margin-bottom: 0px;
+        letter-spacing: -0.5px;
     }
     .sub-title {
-        color: #64748b;
-        font-size: 1rem;
-        margin-bottom: 20px;
+        color: #475569;
+        font-size: 1.05rem;
+        margin-bottom: 25px;
+        font-weight: 500;
     }
-    .metric-card {
-        background-color: #f8fafc;
-        border-radius: 12px;
-        padding: 15px;
-        border-left: 5px solid #0284c7;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
+
+    /* Premium Metric Card */
+    .metric-card-pro {
+        background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px 10px;
         text-align: center;
-        margin-bottom: 15px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
-    .metric-card h4 {
+    .metric-card-pro:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.1), 0 8px 10px -6px rgba(2, 132, 199, 0.1);
+        border-color: #0284c7;
+    }
+    .metric-card-pro h4 {
         color: #64748b;
         font-size: 0.85rem;
-        margin-bottom: 5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
     }
-    .metric-card h2 {
+    .metric-card-pro h2 {
         color: #0284c7;
-        font-size: 1.6rem;
-        font-weight: bold;
+        font-size: 2.2rem;
+        font-weight: 800;
         margin: 0;
+    }
+
+    /* Highlight Set Cards */
+    .set-card {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 14px;
+        text-align: center;
+        padding: 18px 10px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
     }
 </style>
 """, unsafe_allow_html=True)
