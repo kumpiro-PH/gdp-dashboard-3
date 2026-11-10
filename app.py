@@ -225,36 +225,96 @@ def _is_premium_member():
     return member.get("role") == "admin" or member.get("plan") in ("premium", "vip")
 
 def _membership_login():
-    st.markdown('<div class="login-wrap">', unsafe_allow_html=True)
+    """Design-only login preview. No credentials or password validation are active yet."""
+    st.markdown("""
+    <style>
+    .stApp {
+        background:
+          radial-gradient(circle at 12% 8%, rgba(40,126,204,.10), transparent 27%),
+          radial-gradient(circle at 90% 90%, rgba(24,84,151,.08), transparent 30%),
+          #f3f7fc;
+    }
+    .block-container { max-width: 1120px; padding-top: 3.2rem; }
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background: rgba(255,255,255,.97); border: 1px solid #e1eaf5;
+        border-radius: 26px; padding: 24px 26px 20px;
+        box-shadow: 0 22px 65px rgba(28,65,108,.10);
+    }
+    .login-eyebrow {
+        color:#2478c4; font-size:.78rem; font-weight:850;
+        letter-spacing:2.2px; text-transform:uppercase;
+    }
+    .login-title {
+        color:#112d50; font-size:2.05rem; line-height:1.16;
+        font-weight:900; letter-spacing:-.8px; margin:9px 0 8px;
+    }
+    .login-subtitle { color:#63758d; font-size:1rem; margin-bottom:22px; }
+    .login-chip {
+        display:inline-block; padding:7px 12px; border-radius:999px;
+        background:#edf5ff; color:#246cae; font-size:.76rem;
+        font-weight:800; border:1px solid #d8e9fb;
+    }
+    .login-feature {
+        background:#f7faff; border:1px solid #e5edf7;
+        border-radius:15px; padding:15px 16px; margin:10px 0;
+        color:#294360; font-size:.92rem;
+    }
+    .login-feature b { color:#15375d; }
+    .login-footer { color:#8a99ab; font-size:.78rem; text-align:center; margin-top:22px; }
+    div[data-testid="stTextInput"] input {
+        border-radius:12px; min-height:48px; background:#fbfdff;
+        border:1px solid #d9e3ef;
+    }
+    div[data-testid="stTextInput"] input:focus {
+        border-color:#3687d2; box-shadow:0 0 0 2px rgba(54,135,210,.12);
+    }
+    div[data-testid="stButton"] button {
+        border-radius:12px; min-height:49px; font-weight:800;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    left, center, right = st.columns([1, 1.35, 1])
+    with center:
+        with st.container(border=True):
+            st.markdown('<div class="login-eyebrow">MEMBER PORTAL · COMING SOON</div>', unsafe_allow_html=True)
+            st.markdown('<div class="login-title">THAI AI LOTTO<br>PROFESSIONAL</div>', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="login-subtitle">แพลตฟอร์มวิเคราะห์สถิติหวย '
+                'ออกแบบเพื่อประสบการณ์สมาชิกระดับมืออาชีพ</div>',
+                unsafe_allow_html=True
+            )
+            st.markdown('<span class="login-chip">✦ PREMIUM MEMBER EXPERIENCE</span>', unsafe_allow_html=True)
+            st.markdown("")
+            st.markdown("#### เข้าสู่พื้นที่สมาชิก")
+            st.caption("หน้าจอนี้เป็นตัวอย่างการออกแบบเท่านั้น ยังไม่เปิดใช้ระบบบัญชีสมาชิก")
+            st.text_input("ชื่อผู้ใช้", placeholder="กรอกชื่อผู้ใช้", key="design_username")
+            st.text_input("รหัสผ่าน", placeholder="ยังไม่เปิดใช้งาน", type="password",
+                          key="design_password", disabled=True)
+            st.button("ระบบสมาชิกกำลังเตรียมเปิดใช้งาน", use_container_width=True,
+                      type="primary", disabled=True)
+
+    st.markdown("")
+    feat1, feat2, feat3 = st.columns(3)
+    with feat1:
+        st.markdown('<div class="login-feature">📊 <b>AI Analysis</b><br><span>วิเคราะห์ด้วยชุดสูตรและสถิติ</span></div>', unsafe_allow_html=True)
+    with feat2:
+        st.markdown('<div class="login-feature">📈 <b>Backtest Report</b><br><span>ตรวจสอบผลย้อนหลังอย่างเป็นระบบ</span></div>', unsafe_allow_html=True)
+    with feat3:
+        st.markdown('<div class="login-feature">👑 <b>Premium Access</b><br><span>พื้นที่สมาชิกและสิทธิ์การใช้งาน</span></div>', unsafe_allow_html=True)
+
     st.markdown(
-        '<div class="brand-kicker">MEMBER ACCESS</div>'
-        '<div class="brand-heading">THAI AI LOTTO PROFESSIONAL</div>'
-        '<p class="brand-sub">ระบบวิเคราะห์สถิติหวยสำหรับสมาชิก</p>',
+        '<div class="login-footer">THAI AI LOTTO PROFESSIONAL · COMMERCIAL EDITION'
+        '<br>การวิเคราะห์เชิงสถิติ ไม่ใช่การรับประกันผลรางวัล</div>',
         unsafe_allow_html=True
     )
-    st.markdown("---")
-    with st.form("member_login_form", clear_on_submit=False):
-        username = st.text_input("ชื่อผู้ใช้", placeholder="Username")
-        password = st.text_input("รหัสผ่าน", type="password", placeholder="Password")
-        submitted = st.form_submit_button("เข้าสู่ระบบสมาชิก", type="primary", use_container_width=True)
-    if submitted:
-        profile = _authenticate(username, password)
-        if profile:
-            st.session_state["authenticated"] = True
-            st.session_state["member_profile"] = profile
-            st.rerun()
-        else:
-            st.error("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง หรือสมาชิกหมดอายุ/ถูกระงับ")
-    st.info("สำหรับสมาชิกใหม่ กรุณาติดต่อผู้ดูแลระบบเพื่อเปิดใช้งานบัญชี")
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.caption("© THAI AI LOTTO PROFESSIONAL. ผลการวิเคราะห์เป็นข้อมูลเชิงสถิติ ไม่ใช่การรับประกันผลรางวัล")
 
-# Commercial mode is secure-by-default. Configure MEMBERS in Streamlit Secrets.
-AUTH_ENABLED = str(_secret_value("AUTH_ENABLED", "true")).lower() not in ("false", "0", "no")
-if AUTH_ENABLED and not st.session_state.get("authenticated", False):
+# Design preview is enabled temporarily. Authentication and password checks are intentionally
+# not activated until the user approves the visual design.
+LOGIN_DESIGN_PREVIEW = True
+if LOGIN_DESIGN_PREVIEW:
     _membership_login()
     st.stop()
-
 
 # ==========================================
 # 2. SESSION STATE INITIALIZATION
